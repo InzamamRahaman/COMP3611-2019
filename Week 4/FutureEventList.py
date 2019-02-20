@@ -15,5 +15,14 @@ class FutureEventList(object):
 
     def __bool__(self):
         return bool(self.contents)
-    
+
+    def __repr__(self):
+        c = list(map(str, self.contents))
+        return '\n'.join(c)
+
+    def __str__(self):
+        c = list(map(str, self.contents))
+        return '\n'.join(c)
+
+
 

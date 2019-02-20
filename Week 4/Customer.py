@@ -1,7 +1,7 @@
 class Customer(object):
     def __init__(self, arrival_time, service_time):
-        self.arrival_time = 0
-        self.service_time = 0
+        self.arrival_time = arrival_time
+        self.service_time = service_time
         self.service_start = -1
         self.service_finish = -1
 
