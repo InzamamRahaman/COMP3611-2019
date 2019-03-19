@@ -67,6 +67,12 @@ FROM_A = 0
 FROM_B = 1
 FROM_C = 2
 
+STATE_TO_EVENT = {
+    A: FROM_A,
+    B: FROM_B,
+    C: FROM_C
+}
+
 def create_event(event_time, event_type, data_dict=None):
     if data_dict is None:
         data_dict = {}
@@ -98,8 +104,9 @@ MAX_SIM_TIME = 1000
 for cust in customers:
     current_state = cust.get_curr_state()
     time_of_transition = get_time_in_state(current_state)
-    next_state = get_to(current_state)
-    transition_event = create_event(time_of_transition, next_state, cust)
+    #next_state = get_to(current_state)
+    event_type = STATE_TO_EVENT[current_state]
+    transition_event = create_event(time_of_transition, event_type, cust)
     heapq.heappush(event_list, transition_event)
 
 while clock < MAX_SIM_TIME:
@@ -112,23 +119,26 @@ while clock < MAX_SIM_TIME:
     # NB not the most elegant way to implement this, but most explicit from
     # a mathematical perspective
     # Think about how the below code could have been better simplified!
-    if curr_state == A:
+    if curr_state == FROM_A:
         next_state = get_to(A)
+        next_event_type = STATE_TO_EVENT[next_state]
         time_in_next = get_time_in_state(next_state)
         curr_cust.transition(next_state, clock)
-        new_event = create_event(clock + time_in_next, next_state, curr_cust)
+        new_event = create_event(clock + time_in_next, next_event_type, curr_cust)
         heapq.heappush(event_list, new_event)
-    elif curr_state == B:
+    elif curr_state == FROM_B:
         next_state = get_to(B)
+        next_event_type = STATE_TO_EVENT[next_state]
         time_in_next = get_time_in_state(next_state)
         curr_cust.transition(next_state, clock)
-        new_event = create_event(clock + time_in_next, next_state, curr_cust)
+        new_event = create_event(clock + time_in_next, next_event_type, curr_cust)
         heapq.heappush(event_list, new_event)
-    elif curr_state == C:
+    elif curr_state == FROM_C:
         next_state = get_to(C)
+        next_event_type = STATE_TO_EVENT[next_state]
         time_in_next = get_time_in_state(next_state)
         curr_cust.transition(next_state, clock)
-        new_event = create_event(clock + time_in_next, next_state, curr_cust)
+        new_event = create_event(clock + time_in_next, next_event_type, curr_cust)
         heapq.heappush(event_list, new_event)
 
     #print(event_list)
