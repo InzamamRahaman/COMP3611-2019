@@ -15,7 +15,10 @@ TRANSITION_PROBS = {
 AVG_SERVICE_TIMES = {
     R1: 10,
     R2: 5,
-    SP: 20
+    SP: {
+        'M': 23,
+        'F': 25
+    }
 }
 
 CAPACITIES = {
@@ -31,8 +34,11 @@ def transition(current_state):
     next_state = np.random.choice(a=states, p=probs)
     return next_state
 
-def get_service_time(current_state):
-    return np.random.exponential(AVG_SERVICE_TIMES[current_state])
+def get_service_time(current_state, gender):
+    vals = AVG_SERVICE_TIMES[current_state]
+    if current_state == SP:
+        return np.random.exponential(vals[gender])
+    return np.random.exponential(vals)
 
 
 FROM_R1 = 0
@@ -103,7 +109,7 @@ class Customer(object):
         self.current_state = state
 
     def service(self, state):
-        time = get_service_time(state)
+        time = get_service_time(state, self.gender)
         self.service_times.append(state, time)
         return time
 
